@@ -200,6 +200,18 @@
     padding: 4px 4px;
     outline: none;
   }
+  .filter-group input[type="number"] {
+    width: 60px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-deep);
+    padding: 4px 6px;
+    outline: none;
+  }
+  .filter-group input[type="number"]:focus { background: var(--accent-soft); border-radius: 4px; }
+  .filter-sep { color: var(--muted); font-size: 13px; }
   .country-filter {
     padding: 0 40px 24px;
     max-width: 1600px;
@@ -701,6 +713,12 @@
       <option value="10">10A+</option>
       <option value="16">16A</option>
     </select>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">€/nacht</span>
+    <input type="number" id="priceMin" placeholder="min" min="0" step="5">
+    <span class="filter-sep">–</span>
+    <input type="number" id="priceMax" placeholder="max" min="0" step="5">
   </div>
 </div>
 <div class="country-filter" id="countryFilter"></div>
@@ -1703,6 +1721,8 @@
   const onlyPool = document.getElementById("onlyPool");
   const hideRejected = document.getElementById("hideRejected");
   const minAmperageEl = document.getElementById("minAmperage");
+  const priceMinEl = document.getElementById("priceMin");
+  const priceMaxEl = document.getElementById("priceMax");
   const countryFilterEl = document.getElementById("countryFilter");
   const statsEl = document.getElementById("stats");
   let sortKey = "nr";
@@ -1934,6 +1954,8 @@
 
     const hideRej = hideRejected.checked;
     const minAmp = Number(minAmperageEl.value) || 0;
+    const priceMin = Number(priceMinEl.value) || 0;
+    const priceMax = Number(priceMaxEl.value) || 0;
     let rows = flatten(campings).filter(c => {
       if (pool && !c.pool) return false;
       if (hideRej && c.rejected) return false;
@@ -1941,6 +1963,12 @@
       if (minAmp > 0) {
         const amp = maxAmperage(c.amperage);
         if (amp == null || amp < minAmp) return false;
+      }
+      if (priceMin > 0 || priceMax > 0) {
+        const p = c.pricePerNight;
+        if (p == null) return false;
+        if (priceMin > 0 && p < priceMin) return false;
+        if (priceMax > 0 && p > priceMax) return false;
       }
       if (!q) return true;
       return (
@@ -2018,6 +2046,8 @@
   onlyPool.addEventListener("change", render);
   hideRejected.addEventListener("change", render);
   minAmperageEl.addEventListener("change", render);
+  priceMinEl.addEventListener("input", render);
+  priceMaxEl.addEventListener("input", render);
 
   renderCountryFilter();
   renderStats();
