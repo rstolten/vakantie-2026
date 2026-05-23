@@ -114,6 +114,121 @@
     color: var(--muted);
     font-weight: 500;
   }
+  .top-picks {
+    padding: 0 40px 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .top-picks-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+  .top-picks-title small {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+  .top-picks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .top-pick-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-pick-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+  }
+  .top-pick-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+  }
+  .top-pick-rank {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--warm);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .top-pick-rank-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--warm);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .top-pick-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-deep);
+    line-height: 1.2;
+  }
+  .top-pick-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .top-pick-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .top-pick-reason {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.45;
+    margin: 0;
+  }
+  .top-pick-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--warm);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-left: 6px;
+    vertical-align: middle;
+    line-height: 1;
+  }
   .bronnen-link {
     color: var(--accent);
     text-decoration: none;
@@ -701,6 +816,8 @@
 
 <div class="stats" id="stats"></div>
 
+<section class="top-picks" id="topPicks"></section>
+
 <div class="toolbar">
   <input type="search" id="search" placeholder="Zoek op naam, locatie of activiteit…">
   <label><input type="checkbox" id="onlyPool"> Alleen met zwembad</label>
@@ -780,6 +897,8 @@
       ratingAnwb: 7.8,
       ratingZoover: null,
       ratingTripadvisor: 8.2,
+      topPick: 3,
+      topPickReason: "Enige camping die exact in budget (€42) en ≥10A (10–16A) past, met eigen zwembad. Aan de Moezel met uitzicht op kasteel.",
       availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/burgen/happy-life-camping-burgen-102049/",
       availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/burgen/happy-life-camping-burgen-102049/",
       notes: "Wijnbar op de camping, restaurant op 200m van het terrein.",
@@ -943,6 +1062,8 @@
       ratingAnwb: 9.5,             // 228 recensies, 5★ TOP-classificatie!
       ratingZoover: 9.0,
       ratingTripadvisor: 8.0,    // 4/5 op TA
+      topPick: 2,
+      topPickReason: "Hoogste ANWB-score: 9,5 met 228 reviews + 5★ TOP-classificatie. Premium plek B (50–70 m² incl. water/afvoer) heeft 16A.",
       availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/oberweis/prumtal-camping-oberweis-100156/",
       availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/oberweis/prumtal-camping-oberweis-100156/",
       notes: "Verwarmd buitenzwembad (mei–sept) gratis. Twee plek-types beschikbaar (zie rijen hieronder).",
@@ -1282,6 +1403,8 @@
       ratingAnwb: 6.0,                 // 1 review op ANWB (niet representatief)
       ratingZoover: 6.7,                // 369 reviews
       ratingTripadvisor: 4.0,           // 2/5 op TA
+      topPick: 4,
+      topPickReason: "Dichtstbij van alle opties (229 km) en 2 zwembaden + 32m waterglijbaan. 10–16A. Kanttekening: reviews zijn matig (⌀ 5,6).",
       availability: null,
       availability2: null,
       availabilityUrl: "https://www.campingpolleur.be/",
@@ -1326,6 +1449,8 @@
       ratingAnwb: 7.5,                // 22 recensies ANWB
       ratingZoover: 6.7,              // 914 reviews
       ratingTripadvisor: 6.0,         // 3/5 op TA
+      topPick: 5,
+      topPickReason: "Enige camping met OVERDEKT zwembad + glijbanen — unieke optie bij regen. 16A, restaurants en kinderboerderij op terrein.",
       availability: null,
       availability2: null,
       availabilityUrl: "https://www.landal.nl/parken/warsberg",
@@ -1411,6 +1536,8 @@
       ratingAnwb: 9.2,                  // 5 recensies ANWB (klein sample)
       ratingZoover: 8.6,                // 248 reviews, Zoover Award
       ratingTripadvisor: null,
+      topPick: 1,
+      topPickReason: "Beste totaalpakket: dicht bij huis, 16A stroom, verwarmd zwembad pal naast camping, restaurant ernaast, en topscore (⌀ 8,9).",
       availability: null,
       availability2: null,
       availabilityUrl: "https://www.camping-inderenz.com/nl/zoek-boek-overzicht",
@@ -1772,6 +1899,39 @@
     });
   }
 
+  function renderTopPicks() {
+    const picks = campings
+      .filter(c => c.topPick != null)
+      .sort((a, b) => a.topPick - b.topPick);
+    if (!picks.length) return;
+    const el = document.getElementById("topPicks");
+    el.innerHTML = `
+      <h2 class="top-picks-title">🏆 Top picks <small>aanbevolen op basis van afstand, stroom, zwembad, prijs en reviews</small></h2>
+      <div class="top-picks-grid">
+        ${picks.map(c => {
+          const price = c.pricePerNight != null
+            ? "€" + (c.pricePerNight % 1 ? c.pricePerNight.toFixed(2).replace(".", ",") : c.pricePerNight)
+            : (c.variants && c.variants[0] ? "v.a. €" + c.variants[0].pricePerNight : "—");
+          const amp = c.amperage || (c.variants ? c.variants.map(v => v.amperage).join(" / ") : "—");
+          const poolTxt = c.pool ? "🏊 zwembad" : (c.poolNearby ? "🏊 nabij" : "");
+          const rating = ratingAvg(c);
+          return `<a class="top-pick-card" href="${c.website}" target="_blank" rel="noopener">
+            <div class="top-pick-rank"><span class="top-pick-rank-num">${c.topPick}</span> Top pick</div>
+            <div class="top-pick-name">${c.flag || ""} ${c.name}</div>
+            <div class="top-pick-meta">
+              <span>📍 ${c.distance} km</span>
+              <span>💶 ${price}/n</span>
+              <span>⚡ ${amp}</span>
+              ${poolTxt ? `<span>${poolTxt}</span>` : ""}
+              ${rating != null ? `<span>⭐ ${rating.toFixed(1)}</span>` : ""}
+            </div>
+            <p class="top-pick-reason">${c.topPickReason || ""}</p>
+          </a>`;
+        }).join("")}
+      </div>
+    `;
+  }
+
   function renderStats() {
     const unique = campings.filter(c => c.nr != null);
     const accepted = unique.filter(c => !c.rejected).length;
@@ -2005,7 +2165,7 @@
         <td class="status-cell">${formatStatus(c)}</td>
         <td class="photo-cell">${c.image ? `<a href="${c.image}" target="_blank" rel="noopener"><img src="${c.image}" alt="${c.name}" loading="lazy"></a>` : `<div class="no-photo">geen foto</div>`}</td>
         <td>
-          <div class="name"><a href="${c.website}" target="_blank" rel="noopener" class="camping-link">${c.name}</a>${formatInfoIcon(c)}</div>
+          <div class="name"><a href="${c.website}" target="_blank" rel="noopener" class="camping-link">${c.name}</a>${c.topPick ? `<span class="top-pick-badge" title="Top pick #${c.topPick}">🏆 #${c.topPick}</span>` : ""}${formatInfoIcon(c)}</div>
           <div class="location">${c.flag ? `<span class="flag">${c.flag}</span> ` : ""}${c.location}</div>
           ${c._variant ? `<div class="variant-label">↳ ${escapeHtml(c._variant)}</div>` : ""}
         </td>
@@ -2050,6 +2210,7 @@
   priceMaxEl.addEventListener("input", render);
 
   renderCountryFilter();
+  renderTopPicks();
   renderStats();
 
   tbody.addEventListener("blur", (e) => {
