@@ -7,35 +7,112 @@
 <title>Campings vergelijken – Vakantie 2026</title>
 <style>
   :root {
-    --bg: #f7f6f1;
+    --bg: #f5f3ec;
+    --bg-pattern: #ece8db;
     --card: #ffffff;
-    --ink: #1f2937;
+    --ink: #1c2e22;
     --muted: #6b7280;
-    --accent: #2f7d4f;
-    --accent-soft: #e6f1ea;
-    --border: #e5e7eb;
-    --row-alt: #fafaf7;
+    --accent: #2d6a4f;
+    --accent-deep: #1b4332;
+    --accent-soft: #e9f2ec;
+    --accent-bright: #52b788;
+    --warm: #c47d2a;
+    --warm-soft: #fdf3e1;
+    --border: #e3e0d4;
+    --row-alt: #faf8f2;
+    --shadow-sm: 0 1px 2px rgba(28, 46, 34, 0.04);
+    --shadow-md: 0 4px 16px rgba(28, 46, 34, 0.06);
+    --shadow-lg: 0 8px 32px rgba(28, 46, 34, 0.08);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     background: var(--bg);
+    background-image:
+      radial-gradient(circle at 0% 0%, rgba(82, 183, 136, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 100% 0%, rgba(196, 125, 42, 0.05) 0%, transparent 35%);
+    background-attachment: fixed;
     color: var(--ink);
     line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   header {
-    padding: 32px 40px 16px;
+    padding: 48px 40px 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  header .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 6px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
   }
   header h1 {
-    margin: 0 0 4px;
-    font-size: 28px;
-    font-weight: 600;
+    margin: 0 0 8px;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--accent-deep);
   }
-  header p {
+  header .lede {
     margin: 0;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 15px;
+    max-width: 620px;
+  }
+  header .lede a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  header .lede a:hover { border-color: var(--accent); }
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 0 40px 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow-sm);
+    flex: 1;
+    min-width: 140px;
+  }
+  .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-deep);
+    margin-top: 2px;
+    line-height: 1.1;
+  }
+  .stat-value small {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
   }
   .bronnen-link {
     color: var(--accent);
@@ -44,76 +121,107 @@
   }
   .bronnen-link:hover { text-decoration: underline; }
   .toolbar {
-    padding: 16px 40px;
+    padding: 8px 40px 24px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
   }
   .toolbar input[type="search"] {
     flex: 1;
     min-width: 240px;
-    padding: 10px 14px;
+    padding: 12px 16px;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     background: var(--card);
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .toolbar input[type="search"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
   .toolbar label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 14px;
-    color: var(--muted);
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    box-shadow: var(--shadow-sm);
   }
+  .toolbar label:hover { border-color: var(--accent); }
+  .toolbar label input { accent-color: var(--accent); }
   .toolbar button {
     padding: 10px 16px;
     background: var(--accent);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     cursor: pointer;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.05s;
   }
-  .toolbar button:hover { background: #246439; }
+  .toolbar button:hover { background: var(--accent-deep); }
+  .toolbar button:active { transform: translateY(1px); }
   main {
-    padding: 0 40px 40px;
+    padding: 0 40px 48px;
+    max-width: 1600px;
+    margin: 0 auto;
   }
   .table-wrap {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: auto;
+    box-shadow: var(--shadow-md);
   }
   table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 14px;
   }
   th, td {
-    padding: 12px 14px;
+    padding: 14px 16px;
     text-align: left;
     border-bottom: 1px solid var(--border);
     vertical-align: top;
   }
   th {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: linear-gradient(180deg, #1b4332 0%, #2d6a4f 100%);
+    color: #fff;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
     position: sticky;
     top: 0;
+    border-bottom: none;
+    z-index: 5;
   }
-  th:hover { background: #d6e8de; }
+  th:first-child { border-top-left-radius: 16px; }
+  th:last-child  { border-top-right-radius: 16px; }
+  th:hover { background: linear-gradient(180deg, #14361f 0%, #245a3f 100%); }
   th .arrow { opacity: 0.4; font-size: 10px; margin-left: 4px; }
   th.sorted .arrow { opacity: 1; }
+  tbody tr { transition: background 0.12s; }
   tbody tr:nth-child(even) { background: var(--row-alt); }
-  tbody tr:hover { background: #f0ede4; }
+  tbody tr:hover { background: var(--accent-soft); }
   td.nr {
     font-weight: 700;
     font-size: 18px;
@@ -121,38 +229,63 @@
     text-align: center;
     width: 40px;
   }
-  td.photo-cell { width: 120px; padding: 8px; }
+  td.photo-cell { width: 130px; padding: 10px; }
   td.photo-cell img {
-    width: 110px;
-    height: 75px;
+    width: 120px;
+    height: 90px;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 10px;
     display: block;
-    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  td.photo-cell img:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
   }
   td.photo-cell .no-photo {
-    width: 110px;
-    height: 75px;
-    background: #f0ede4;
-    border: 1px dashed var(--border);
-    border-radius: 6px;
+    width: 120px;
+    height: 90px;
+    background: linear-gradient(135deg, #f0ede4 0%, #e8e3d4 100%);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--muted);
     font-size: 11px;
+    box-shadow: var(--shadow-sm);
   }
-  .name { font-weight: 600; }
-  .location { color: var(--muted); font-size: 13px; }
+  .name {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--accent-deep);
+  }
+  .location {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
   .pill {
-    display: inline-block;
-    padding: 2px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
     border-radius: 999px;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
-  .yes { background: #d1fae5; color: #065f46; }
-  .no { background: #fee2e2; color: #991b1b; }
+  .yes {
+    background: #d1f5e0;
+    color: #14532d;
+    box-shadow: inset 0 0 0 1px #b8e6c5;
+  }
+  .no {
+    background: #fde7e7;
+    color: #991b1b;
+    box-shadow: inset 0 0 0 1px #f5c5c5;
+  }
   .rating {
     font-size: 12px;
     color: #b45309;
@@ -183,11 +316,22 @@
     max-width: 240px;
   }
   a.website {
-    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    background: var(--accent);
+    color: white;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.15s, transform 0.05s;
+    white-space: nowrap;
   }
-  a.website:hover { text-decoration: underline; }
+  a.website:hover { background: var(--accent-deep); }
+  a.website:active { transform: translateY(1px); }
   .price-small { color: var(--muted); font-size: 12px; }
   .price-tag {
     display: inline-block;
@@ -474,13 +618,17 @@
 <body>
 
 <header>
+  <div class="eyebrow">⛺ Vakantie 2026</div>
   <h1>Campings vergelijken</h1>
-  <p>Vakantie 2026 — klik op een kolomkop om te sorteren · <a href="bronnen.md" class="bronnen-link">bronnen &amp; te bekijken →</a></p>
+  <p class="lede">Tent, 2 volwassenen + 2 kinderen — sorteer door op een kolomkop te klikken. <a href="bronnen.md">Bronnen &amp; te bekijken →</a></p>
 </header>
+
+<div class="stats" id="stats"></div>
 
 <div class="toolbar">
   <input type="search" id="search" placeholder="Zoek op naam, locatie of activiteit…">
   <label><input type="checkbox" id="onlyPool"> Alleen met zwembad</label>
+  <label><input type="checkbox" id="hideRejected"> Verberg afgewezen</label>
 </div>
 
 <main>
@@ -1219,8 +1367,26 @@
   const tbody = document.getElementById("rows");
   const search = document.getElementById("search");
   const onlyPool = document.getElementById("onlyPool");
+  const hideRejected = document.getElementById("hideRejected");
+  const statsEl = document.getElementById("stats");
   let sortKey = "nr";
   let sortDir = 1;
+
+  function renderStats() {
+    const unique = campings.filter(c => c.nr != null);
+    const accepted = unique.filter(c => !c.rejected).length;
+    const rejected = unique.filter(c => c.rejected).length;
+    const withPool = unique.filter(c => c.pool && !c.rejected).length;
+    const week1 = unique.filter(c => !c.rejected && (c.availability === "yes" || (c.variants && c.variants.some(v => v.availability === "yes")))).length;
+    const week2 = unique.filter(c => !c.rejected && (c.availability2 === "yes" || (c.variants && c.variants.some(v => v.availability2 === "yes")))).length;
+    statsEl.innerHTML = `
+      <div class="stat"><div class="stat-label">Kandidaten</div><div class="stat-value">${accepted} <small>/ ${unique.length}</small></div></div>
+      <div class="stat"><div class="stat-label">Met zwembad</div><div class="stat-value">${withPool}</div></div>
+      <div class="stat"><div class="stat-label">Vrij 8–15 aug</div><div class="stat-value">${week1}</div></div>
+      <div class="stat"><div class="stat-label">Vrij 15–22 aug</div><div class="stat-value">${week2}</div></div>
+      <div class="stat"><div class="stat-label">Afgewezen</div><div class="stat-value">${rejected}</div></div>
+    `;
+  }
 
   const NOTES_KEY = "vakantie2026.notes";
   function loadNotes() {
@@ -1386,8 +1552,10 @@
     const q = search.value.trim().toLowerCase();
     const pool = onlyPool.checked;
 
+    const hideRej = hideRejected.checked;
     let rows = flatten(campings).filter(c => {
       if (pool && !c.pool) return false;
+      if (hideRej && c.rejected) return false;
       if (!q) return true;
       return (
         c.name.toLowerCase().includes(q) ||
@@ -1462,6 +1630,9 @@
 
   search.addEventListener("input", render);
   onlyPool.addEventListener("change", render);
+  hideRejected.addEventListener("change", render);
+
+  renderStats();
 
   tbody.addEventListener("blur", (e) => {
     const el = e.target.closest(".notes");
