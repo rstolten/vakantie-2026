@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campings vergelijken – Vakantie 2026</title>
+<style>
+  :root {
+    --bg: #f7f6f1;
+    --card: #ffffff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --accent: #2f7d4f;
+    --accent-soft: #e6f1ea;
+    --border: #e5e7eb;
+    --row-alt: #fafaf7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    padding: 32px 40px 16px;
+  }
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 28px;
+    font-weight: 600;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .bronnen-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .bronnen-link:hover { text-decoration: underline; }
+  .toolbar {
+    padding: 16px 40px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .toolbar input[type="search"] {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--card);
+  }
+  .toolbar label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .toolbar button {
+    padding: 10px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .toolbar button:hover { background: #246439; }
+  main {
+    padding: 0 40px 40px;
+  }
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+  }
+  th:hover { background: #d6e8de; }
+  th .arrow { opacity: 0.4; font-size: 10px; margin-left: 4px; }
+  th.sorted .arrow { opacity: 1; }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr:hover { background: #f0ede4; }
+  td.nr {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent);
+    text-align: center;
+    width: 40px;
+  }
+  td.photo-cell { width: 120px; padding: 8px; }
+  td.photo-cell img {
+    width: 110px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    border: 1px solid var(--border);
+  }
+  td.photo-cell .no-photo {
+    width: 110px;
+    height: 75px;
+    background: #f0ede4;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .name { font-weight: 600; }
+  .location { color: var(--muted); font-size: 13px; }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .yes { background: #d1fae5; color: #065f46; }
+  .no { background: #fee2e2; color: #991b1b; }
+  .rating {
+    font-size: 12px;
+    color: #b45309;
+  }
+  .rating-avg {
+    font-weight: 700;
+    font-size: 16px;
+    color: #b45309;
+    margin-bottom: 4px;
+  }
+  .rating-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    align-items: baseline;
+    font-size: 11px;
+  }
+  .rating-label {
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .rating-value { font-weight: 600; color: #b45309; }
+  .rating-empty { color: var(--muted); font-weight: 400; }
+  .activities {
+    font-size: 13px;
+    color: #374151;
+    max-width: 240px;
+  }
+  a.website {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  a.website:hover { text-decoration: underline; }
+  .price-small { color: var(--muted); font-size: 12px; }
+  .price-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .price-tag-b { background: #b45309; }
+  .price-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .pool-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .pitch-count {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .pitch-layout {
+    display: inline-block;
+    font-size: 11px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-top: 3px;
+    text-transform: capitalize;
+  }
+  .flag {
+    font-size: 16px;
+    margin-right: 2px;
+    line-height: 1;
+  }
+  .fac {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    margin-right: 4px;
+    font-size: 14px;
+    cursor: help;
+  }
+  .fac-yes { background: #d1fae5; }
+  .fac-no  { background: #fee2e2; opacity: 0.45; filter: grayscale(1); }
+  .fac-unknown { background: #f3f4f6; opacity: 0.45; filter: grayscale(1); }
+  .src-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent);
+    cursor: pointer;
+  }
+  .src-link:hover {
+    color: var(--accent);
+    border-bottom-style: solid;
+    background: var(--accent-soft);
+  }
+  td.notes-cell { width: 200px; padding: 6px; }
+  .notes {
+    min-height: 60px;
+    width: 100%;
+    padding: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    background: #fffbea;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: text;
+    white-space: pre-wrap;
+    outline: none;
+  }
+  .notes:hover { border-color: #f0d97a; }
+  .notes:focus {
+    background: #fffef5;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .notes:empty::before {
+    content: attr(data-placeholder);
+    color: var(--muted);
+    font-style: italic;
+  }
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-style: italic;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    margin-left: 6px;
+    cursor: help;
+    vertical-align: middle;
+    position: relative;
+    outline: none;
+  }
+  .info-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1f2937;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-style: normal;
+    line-height: 1.4;
+    width: 240px;
+    white-space: normal;
+    text-align: left;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .info-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #1f2937;
+  }
+  .info-icon:hover .info-tooltip,
+  .info-icon:focus .info-tooltip { display: block; }
+  td.status-cell { text-align: center; width: 40px; }
+  .status-check {
+    color: #16a34a;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .status-cross {
+    position: relative;
+    display: inline-block;
+    color: #dc2626;
+    font-size: 22px;
+    font-weight: 700;
+    cursor: help;
+    outline: none;
+  }
+  .status-cross:hover .info-tooltip,
+  .status-cross:focus .info-tooltip { display: block; }
+  tr.rejected td { opacity: 0.45; }
+  tr.rejected:hover td { opacity: 1; }
+
+  /* Mobile: kaartlayout in plaats van tabel */
+  @media (max-width: 768px) {
+    header { padding: 16px 16px 8px; }
+    header h1 { font-size: 22px; }
+    .toolbar { padding: 12px 16px; }
+    main { padding: 0 12px 24px; }
+    .table-wrap { border: none; background: transparent; overflow: visible; }
+    table, thead, tbody, tr, td, th { display: block; }
+    thead { display: none; }
+    tbody tr {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 8px 12px;
+      align-items: center;
+    }
+    tbody tr:hover { background: var(--card); }
+    tbody tr:nth-child(even) { background: var(--card); }
+    tbody td {
+      border: none;
+      padding: 4px 0;
+      position: relative;
+    }
+    tbody td:before {
+      content: attr(data-label);
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+    /* eerste kolommen: nummer + status + foto naast naam */
+    td.nr {
+      grid-column: 1;
+      grid-row: 1;
+      text-align: left;
+      font-size: 22px;
+    }
+    td.nr:before, td.status-cell:before, td.photo-cell:before { display: none; }
+    td.status-cell {
+      grid-column: 1;
+      grid-row: 2;
+      text-align: left;
+    }
+    td.photo-cell {
+      grid-column: 1;
+      grid-row: 3 / span 2;
+      width: auto;
+      padding: 0;
+    }
+    td.photo-cell img, td.photo-cell .no-photo {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+    }
+    /* naam-cel groot bovenaan */
+    tbody tr > td:nth-child(4) {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+    }
+    tbody tr > td:nth-child(4):before { display: none; }
+    tbody tr > td:nth-child(4) .name a { font-size: 16px; }
+    /* alle andere cellen onder elkaar in de rechter kolom */
+    tbody tr > td:nth-child(n+5) {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+    td.notes-cell { width: auto; }
+    td.photo-cell { grid-column: 1 / -1; grid-row: auto; }
+    td.photo-cell img, td.photo-cell .no-photo {
+      max-width: 100%;
+      height: 180px;
+    }
+    .info-tooltip { width: 200px; }
+  }
+  .camping-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .camping-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .variant-label {
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  tr.variant-row td {
+    border-top: 1px dashed var(--border);
+    background: linear-gradient(to right, var(--accent-soft) 0%, transparent 3%);
+  }
+  tr.variant-row td:first-child,
+  tr.variant-row td.photo-cell {
+    opacity: 0.3;
+  }
+  tfoot td {
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 12px 14px;
+  }
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Campings vergelijken</h1>
+  <p>Vakantie 2026 — klik op een kolomkop om te sorteren · <a href="bronnen.md" class="bronnen-link">bronnen &amp; te bekijken →</a></p>
+</header>
+
+<div class="toolbar">
+  <input type="search" id="search" placeholder="Zoek op naam, locatie of activiteit…">
+  <label><input type="checkbox" id="onlyPool"> Alleen met zwembad</label>
+</div>
+
+<main>
+  <div class="table-wrap">
+    <table id="campings">
+      <thead>
+        <tr>
+          <th data-sort="nr" data-type="num">#<span class="arrow">▲▼</span></th>
+          <th data-sort="rejected">✓/✗ <span class="arrow">▲▼</span></th>
+          <th>Foto</th>
+          <th data-sort="name">Naam & locatie <span class="arrow">▲▼</span></th>
+          <th data-sort="distance" data-type="num">Afstand v.a. Utrecht <span class="arrow">▲▼</span></th>
+          <th data-sort="pricePerNight" data-type="num">€/nacht (tent) <span class="arrow">▲▼</span></th>
+          <th data-sort="pricePerWeek" data-type="num">€/week (tent) <span class="arrow">▲▼</span></th>
+          <th data-sort="pool">Zwembad <span class="arrow">▲▼</span></th>
+          <th>Voorz.</th>
+          <th data-sort="pitchCount" data-type="num">Plek <span class="arrow">▲▼</span></th>
+          <th data-sort="accommodation">Accommodatie <span class="arrow">▲▼</span></th>
+          <th data-sort="amperage">Stroom <span class="arrow">▲▼</span></th>
+          <th>Activiteiten</th>
+          <th data-sort="ratingAvg" data-type="num">Reviews <span class="arrow">▲▼</span></th>
+          <th data-sort="availability">Vrij<br><small>8–15 aug</small> <span class="arrow">▲▼</span></th>
+          <th data-sort="availability2">Vrij<br><small>15–22 aug</small> <span class="arrow">▲▼</span></th>
+          <th>Notities</th>
+          <th>Website</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+  // Pas deze lijst aan met je eigen campings.
+  const campings = [
+    {
+      nr: null,              // niet meer in shortlist
+      name: "Häppy Life – Mosel Camping Burgen",
+      flag: "🇩🇪",
+      location: "Burgen, Moezel, Duitsland",
+      distance: 370,         // km vanaf Utrecht (schatting)
+      pricePerNight: 42,     // tent, 2 volw + 1 kind (ANWB-info)
+      pricePerWeek: 294,
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",       // openluchtzwembad
+      poolNearby: null,
+      pitchSize: "80–100 m²",
+      pitchCount: 183,        // 120 toerist + 60 vast + 3 huur
+      pitchLayout: "laantje",
+      size: "Middelgroot",
+      accommodation: "Tent, caravan, camper, trekkershut",
+      amperage: "10–16A",
+      playground: true,        // buitenspeeltuin
+      restaurant: true,        // wijnbar op camping; restaurant op 200m
+      activities: "Zwemmen in Moezel, kanoën, fietsen, wandelen, minigolf, beachvolley, wijnproeverijen, kasteel Bischofstein",
+      ratingAnwb: 7.8,
+      ratingZoover: null,
+      ratingTripadvisor: 8.2,
+      availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/burgen/happy-life-camping-burgen-102049/",
+      availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/burgen/happy-life-camping-burgen-102049/",
+      notes: "Wijnbar op de camping, restaurant op 200m van het terrein.",
+      image: null,
+      website: "https://www.haeppy-life.de/mosel-camping-burgen/",
+      sources: {
+        price: "https://www.anwbcamping.nl/campings/camping-burgen",
+        pool: "https://www.anwbcamping.nl/campings/camping-burgen",
+        pitches: "https://www.anwbcamping.nl/campings/camping-burgen",
+        amperage: "https://www.anwbcamping.nl/campings/camping-burgen",
+        facilities: "https://www.anwbcamping.nl/campings/camping-burgen",
+        activities: "https://www.anwbcamping.nl/campings/camping-burgen",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-burgen",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g1185058-d4372916-Reviews-Happy_Life_Mosel_Camping_Burgen-Burgen_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 4,
+      rejected: true,
+      rejectedReason: "Afgewezen: half uur rijden naar supermarkt, midden in Duitsland.",
+      name: "Natur Camping am See – Kreuzeck",
+      flag: "🇩🇪",
+      location: "Hahnenklee, Harz, Duitsland",
+      distance: 440,
+      pricePerNight: 45.50,   // tent, 2 volw + 1 kind (11j)
+      pricePerWeek: 319,
+      priceLabel: "tent",
+      pool: false,
+      poolType: null,
+      poolNearby: "meer naast camping",
+      pitchSize: null,
+      pitchCount: 200,         // 140 toerist + 60 vast
+      pitchLayout: "terras",   // "Terrassencamping" → terrasvormig aangelegd
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, vakantiehuis",
+      amperage: "16A",          // CEE-aansluiting (standaard)
+      playground: true,
+      restaurant: true,        // Harzer Fuchshöhle (sinds 2025) + Schoko am Kreuzeck
+      activities: "Zwemmen in meer, wandelen, mountainbiken, nationaalpark Harz, sauna, Goslar/Quedlinburg",
+      ratingAnwb: null,
+      ratingZoover: 8.5,
+      ratingTripadvisor: null,
+      availabilityUrl: "https://www.camping.info/en/campsite/das-kreuzeck-campingplatz-und-ferienhauser",
+      availabilityUrl2: "https://www.camping.info/en/campsite/das-kreuzeck-campingplatz-und-ferienhauser",
+      notes: "Geen zwembad, wel zwemmen in het meer ernaast. Nieuw restaurant Harzer Fuchshöhle sinds 2025.",
+      image: "https://www.natur-camping-am-see.de/wp-content/uploads/2023/04/Camping-Harz-Seeblick-1980x1114px-jpg.webp",
+      website: "https://www.natur-camping-am-see.de/",
+      sources: {
+        price: "https://www.natur-camping-am-see.de/preise/",
+        pool: "https://www.natur-camping-am-see.de/camping/der-platz/",
+        pitches: "https://www.hahnenklee.de/uebernachten/camping",
+        facilities: "https://www.natur-camping-am-see.de/camping/der-platz/",
+        activities: "https://www.natur-camping-am-see.de/camping/der-platz/",
+        ratingZoover: "https://www.zoover.nl/duitsland/neder-saksen-niedersachsen/goslar/am-kreuzeck/camping"
+      }
+    },
+    {
+      nr: 1,
+      name: "Camping Altschmiede",
+      flag: "🇩🇪",
+      location: "Bollendorf a.d. Sauer, Eifel, Duitsland",
+      distance: 370,
+      pricePerNight: 39,      // tent, 2 volw + 1 kind, hoogseizoen (excl. stroom)
+      pricePerWeek: 273,
+      priceLabel: "tent",
+      pool: true,             // zwemparadijs met 3 waterglijbanen
+      poolType: "open + overdekt",
+      poolNearby: null,
+      pitchSize: null,
+      pitchCount: 250,        // 250 toeristen-plaatsen (+ 100 vast)
+      pitchLayout: "laantje",
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, vakantiehuis",
+      amperage: null,
+      playground: true,
+      restaurant: true,
+      activities: "Zwembad met 3 glijbanen, kanoën op de Sauer, wandelen, klimmen, mountainbike, vissen, animatie, Mullerthal, Trier",
+      ratingAnwb: null,
+      ratingZoover: 5.6,
+      ratingTripadvisor: null,
+      availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/bollendorf/camping-altschmiede-gmbh-102007/",
+      availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/bollendorf/camping-altschmiede-gmbh-102007/",
+      notes: "Zwemparadijs met 3 glijbanen + overdekt zwembad (handig bij regen). 350 plaatsen totaal (250 toerist).",
+      image: "https://www.camping-altschmiede.de/wp-content/uploads/2015/06/Teaser_Camping.jpg",
+      website: "https://www.camping-altschmiede.de/",
+      sources: {
+        price: "https://www.camping-altschmiede.de/camping/camping-preise/",
+        pool: "https://www.anwbcamping.nl/campings/campingplatz-altschmiede",
+        pitches: "https://www.anwbcamping.nl/campings/campingplatz-altschmiede",
+        facilities: "https://www.camping-altschmiede.de/",
+        activities: "https://www.camping-altschmiede.de/",
+        ratingZoover: "https://www.zoover.nl/duitsland/rheinland-pfalz/bollendorf/altschmiede/camping",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g1047596-d17780332-Reviews-Camping_Altschmiede-Bollendorf_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 2,
+      name: "Campingplatz am Königsberg – Wolfstein",
+      flag: "🇩🇪",
+      location: "Wolfstein, Rijnland-Palts, Duitsland",
+      distance: 470,
+      pricePerNight: null,    // gezinsprijs alleen via boekingsformulier (plaats v.a. €16)
+      pricePerWeek: null,
+      priceLabel: "tent",
+      priceNote: "v.a. €16/nacht (alleen plek)",
+      pool: true,
+      poolType: "open",        // verwarmd buitenzwembad gemeente Wolfstein, gratis voor gasten
+      poolNearby: "direct naast camping",
+      pitchSize: null,
+      pitchCount: 90,
+      pitchLayout: "laantje",
+      size: "Middelgroot",
+      accommodation: "Tent, caravan, camper, houten hut, stacaravan, iglo, appartement",
+      amperage: "16A",
+      playground: true,
+      restaurant: null,        // niet expliciet vermeld
+      activities: "Minigolf, sportcentrum, wandelen, fietsen, kalkmijn, wildpark, botanische tuin",
+      ratingAnwb: null,           // 4 sterren TIPP 2024
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/wolfstein/camping-am-konigsberg-102115/",
+      availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/wolfstein/camping-am-konigsberg-102115/",
+      notes: "Verwarmd buitenzwembad direct naast camping, gratis voor gasten (mei–sept). Prijs alleen via boekingsformulier — vanaf €16 per nacht voor de plek.",
+      image: "https://www.campingwolfstein.de/wp-content/uploads/2024/12/Stellplaetze.png",
+      website: "https://www.campingwolfstein.de/nl/camping/",
+      sources: {
+        price: "https://www.campingwolfstein.de/nl/standplaats/",
+        pool: "https://www.campingwolfstein.de/nl/camping/",
+        pitches: "https://www.campingwolfstein.de/nl/camping/",
+        amperage: "https://www.campingwolfstein.de/nl/camping/",
+        facilities: "https://www.campingwolfstein.de/nl/camping/",
+        activities: "https://www.campingwolfstein.de/nl/camping/",
+        ratingZoover: "https://www.zoover.nl/a/125023/am-konigsberg",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g1053722-d15066195-Reviews-Campingplatz_am_Koenigsberg-Wolfstein_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 3,
+      name: "Prümtal Camping",
+      flag: "🇩🇪",
+      location: "Oberweis, Eifel, Duitsland",
+      distance: 340,
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",        // verwarmd buitenzwembad (mei–sept)
+      poolNearby: null,
+      pitchCount: 240,         // ±230–246 volgens diverse bronnen
+      pitchLayout: "laantje",  // gecategoriseerde plekken per m²
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, stacaravan (4 & 6 pers)",
+      playground: true,
+      restaurant: true,        // Köhler-Stuben op locatie
+      variants: [
+        { label: "Tentplek (cat 1)", pitchSize: "25–35 m²", pricePerNight: 38.35, pricePerWeek: 268, amperage: "6A" },
+        { label: "Comfort (cat 2)", pitchSize: "50–70 m² incl. water/afvoer", pricePerNight: 47, pricePerWeek: 329, amperage: "16A" }
+      ],
+      activities: "Voetbal, basketbal, tafeltennis, kinderanimatie, wandelen, fietsen, vissen",
+      ratingAnwb: null,
+      ratingZoover: 9.0,
+      ratingTripadvisor: 8.0,    // 4/5 op TA
+      availabilityUrl: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/oberweis/prumtal-camping-oberweis-100156/",
+      availabilityUrl2: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/oberweis/prumtal-camping-oberweis-100156/",
+      notes: "Verwarmd buitenzwembad (mei–sept) gratis. Twee plek-types beschikbaar (zie rijen hieronder).",
+      image: "https://www.pruemtal.de/administrator/cache/preview/367e0bf0ef549bf1e63483cded2f745e.jpg",
+      website: "https://www.pruemtal.de/index.php/pruemtal-camping-nl/camping-plaatsen-nl?lang=nl",
+      sources: {
+        price: "https://www.pruemtal.de/images/Preisliste_2026_NL.pdf",
+        pool: "https://www.pruemtal.de/index.php/pruemtal-camping-nl/camping-plaatsen-nl?lang=nl",
+        pitches: "https://www.anwbcamping.nl/campings/pruemtal-camping-oberweis",
+        amperage: "https://www.pruemtal.de/index.php/pruemtal-camping-nl/camping-plaatsen-nl?lang=nl",
+        facilities: "https://www.pruemtal.de/index.php/pruemtal-camping-nl/camping-plaatsen-nl?lang=nl",
+        activities: "https://www.pruemtal.de/index.php/pruemtal-camping-nl/camping-plaatsen-nl?lang=nl",
+        ratingZoover: "https://www.zoover.nl/a/138713/prumtal-camping-oberweis",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g11850363-d12860230-Reviews-Pruemtal_Camping_Oberweis-Oberweis_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 5,
+      name: "Camping des Breuils",
+      flag: "🇫🇷",
+      location: "Verdun, Lorraine (Grand Est), Frankrijk",
+      distance: 430,
+      pricePerNight: 39,      // tent, 2 volw + 1 kind, hoogseizoen (excl. stroom)
+      pricePerWeek: 273,
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",        // Frans buitenzwembad
+      poolNearby: null,
+      pitchSize: "±100 m²",
+      pitchCount: 162,
+      pitchLayout: "laantje",   // omgeven door hagen en bomen
+      size: "Middelgroot",      // 5,5 ha
+      accommodation: "Tent, caravan, camper, mobile home",
+      amperage: "6A",           // bevestigd via camping-grand-est.fr/nl-fr/camping.php
+      playground: true,
+      restaurant: true,         // restaurant-bar
+      activities: "Beachvolley, sportcomplex, fietsverhuur, slagveld Verdun",
+      ratingAnwb: null,             // 3 sterren classificatie
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      notes: "3-sterren camping, 5,5 ha. 6A stroom (let op: onder de 10A grens). 5% korting bij 10+ nachten. Verdun historische slagvelden in de buurt.",
+      image: "https://www.camping-grand-est.fr/ressources/images/Camping-des-Breuils-01_1d10_lg.jpg",
+      website: "https://www.camping-grand-est.fr/",
+      sources: {
+        price: "https://www.camping-grand-est.fr/tarifs.php",
+        pool: "https://www.camping-grand-est.fr/",
+        pitches: "https://www.camping-grand-est.fr/",
+        facilities: "https://www.camping-grand-est.fr/",
+        activities: "https://www.camping-grand-est.fr/"
+      }
+    },
+    {
+      nr: 6,
+      name: "EuroParcs Kohnenhof",
+      flag: "🇱🇺",
+      location: "Clervaux, Luxemburgse Ardennen, Luxemburg",
+      distance: 370,           // km vanaf Utrecht (schatting via Aachen)
+      priceLabel: "tent",
+      priceNote: "alleen plek, excl. personen en kortingen",
+      pool: false,
+      poolType: null,
+      poolNearby: "AquaNat'Our zwembad op 4 km",
+      pitchCount: null,
+      size: "Groot",           // groot vakantiepark, meerdere accommodatietypes
+      accommodation: "Tent, caravan, camper, chalet, tiny house",
+      playground: true,
+      restaurant: true,         // Restaurant EuroParcs Kohnenhof
+      variants: [
+        { label: "Wandererfeld", pitchSize: null, pitchLayout: "veldje", pricePerNight: 17, pricePerWeek: 119, amperage: "geen stroom", notes: "Tentenveld zonder stroom (min. 3 nachten).",
+          availability: "yes",  availabilityUrl:  "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/wandererfeld?guest_group%5Badults%5D=2&period%5Bstart_date%5D=2026-08-08&period%5Bend_date%5D=2026-08-15",
+          availability2: "yes", availabilityUrl2: "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/wandererfeld?guest_group%5Badults%5D=2&period%5Bstart_date%5D=2026-08-15&period%5Bend_date%5D=2026-08-22" },
+        { label: "Komfort am Wasser", pitchSize: null, pitchLayout: "laantje", pricePerNight: 32, pricePerWeek: 224, amperage: "6A", notes: "Aan de rivier de Our, met 6A stroom + gratis WLAN.",
+          availability: "yes",  availabilityUrl:  "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/stellplatz-komfort-am-wasser?guest_group%5Badults%5D=2&period%5Bstart_date%5D=2026-08-08&period%5Bend_date%5D=2026-08-15",
+          availability2: "yes", availabilityUrl2: "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/stellplatz-komfort-am-wasser?guest_group%5Badults%5D=2&period%5Bstart_date%5D=2026-08-15&period%5Bend_date%5D=2026-08-22" }
+      ],
+      activities: "Wandelen, mountainbiken, e-bike verhuur, hondvriendelijk, gratis OV Luxemburg, rivier de Our, AquaNat'Our zwembad nabij",
+      ratingAnwb: null,             // gastenscores 9-10 maar geen officieel cijfer
+      ratingZoover: null,
+      ratingTripadvisor: 8.0,        // 4/5 op TA
+      notes: "Park heeft ook chalets en tiny houses. Zwembad AquaNat'Our op 4 km. Twee tentplek-types beschikbaar (zie rijen hieronder).",
+      image: "https://cdn.bookingexperts.com/uploads/image/image/712973/cover_camping_1.jpg",
+      website: "https://www.europarcs.de/ferienparks/kohnenhof",
+      sources: {
+        price: "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/stellplatz-komfort-am-wasser",
+        pool: "https://www.europarcs.de/ferienparks/kohnenhof",
+        pitches: "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/stellplatz-komfort-am-wasser",
+        amperage: "https://www.europarcs.de/ferienparks/kohnenhof/unterkuenfte/stellplatz-komfort-am-wasser",
+        facilities: "https://www.europarcs.de/ferienparks/kohnenhof",
+        activities: "https://www.europarcs.de/ferienparks/kohnenhof",
+        ratingZoover: "https://www.zoover.nl/a/100753/vakantiepark-europarcs-kohnenhof",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g2477135-d24941969-Reviews-EuroParcs_Kohnenhof-Hosingen_Parc_Hosingen.html"
+      }
+    },
+    {
+      nr: 7,
+      name: "Sandaya Parc La Clusure",
+      flag: "🇧🇪",
+      location: "Tellin, Ardennen, België",
+      distance: 380,            // km vanaf Utrecht (schatting)
+      pricePerNight: 40,        // gezin 2 volw + 2 kinderen (3+7j), hoogseizoen
+      pricePerWeek: 280,        // 7 × €40
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",         // verwarmd buitenzwembad (binnenbad op 14 km)
+      poolNearby: "binnenbad op 14 km",
+      pitchSize: "90–100 m²",
+      pitchCount: 147,          // 147 toeristische plaatsen (+ 281 huur)
+      pitchLayout: "laantje",
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, mobile home",
+      amperage: "10–16A",
+      playground: true,
+      restaurant: true,
+      activities: "Verwarmd zwembad, boogschieten, fietsverhuur, e-bike, mountainbike, kinderanimatie, grotten van Han (12 km), Rochefort, rivier l'Homme",
+      ratingAnwb: 8.1,
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availability: "no",
+      availabilityUrl: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure?date_from=2026-08-08&date_to=2026-08-15&children=3%2C7&adults=2&flex=true",
+      availabilityUrl2: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure?date_from=2026-08-15&date_to=2026-08-22&children=3%2C7&adults=2&flex=true",
+      notes: "4-sterren camping, ACSI 'Best Campsite Belgium 2024'. Volgeboekt voor 8–15 aug 2026 volgens ANWB. Open 3 april – 1 november 2026. Honden €5/nacht.",
+      image: "https://img.sandayagroupe.eu/images/7/9/8/7/127897-134-fre-FR/2419ce325285-2022_clu_infrastructures_1003_rc2.jpg",
+      website: "https://www.sandaya.co.uk/our-campsites/parc-la-clusure",
+      sources: {
+        price: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        pool: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        pitches: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        amperage: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        facilities: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        activities: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-sandaya-parc-la-clusure",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g3561705-d6114910-Reviews-Camping_Sandaya_Parc_La_Clusure-Tellin_Luxembourg_Province_The_Ardennes_Wallonia.html"
+      }
+    },
+    {
+      nr: 8,
+      name: "Camping Auf Kengert",
+      flag: "🇱🇺",
+      location: "Larochette, Müllerthal, Luxemburg",
+      distance: 365,
+      pricePerNight: 54.50,    // tent, 2 volw + 2 kind, hoogseizoen (ANWB)
+      pricePerWeek: 382,
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",         // verwarmd buitenzwembad (binnenbad op 10 km)
+      poolNearby: null,
+      pitchSize: "100 m²",
+      pitchCount: 168,
+      pitchLayout: "laantje",
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, chalet, cottage, glamping, huurtent",
+      amperage: "16A",
+      playground: true,
+      restaurant: true,
+      activities: "Verwarmd zwembad, wandelen (Mullerthal Trail), Petite Suisse, speeltuinen, animatie",
+      ratingAnwb: 8.6,
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availability: "no",
+      availability2: "no",
+      availabilityUrl: "https://www.anwbcamping.nl/campings/camping-auf-kengert?date_from=2026-08-08&date_to=2026-08-15&children=3%2C7&adults=2&flex=true",
+      availabilityUrl2: "https://www.anwbcamping.nl/campings/camping-auf-kengert?date_from=2026-08-15&date_to=2026-08-22&children=3%2C7&adults=2&flex=true",
+      notes: "4★ camping in Petite Suisse Luxembourgeoise. Volgeboekt voor beide weken (8–22 aug 2026) volgens ANWB. Toegang Mullerthal Trail.",
+      image: "https://kengert.lu/ypoorgyg/2022/05/kengert_camping_home.jpg",
+      website: "https://www.kengert.lu/",
+      sources: {
+        price: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        pool: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        pitches: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        amperage: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        facilities: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        activities: "https://www.kengert.lu/",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-auf-kengert",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g206506-d10426202-Reviews-Auf_Kengert_Camping-Larochette.html"
+      }
+    },
+    {
+      nr: 9,
+      name: "Campingpark Eifel",
+      flag: "🇩🇪",
+      location: "Waxweiler, Eifel, Duitsland",
+      distance: 330,
+      pricePerNight: 39,       // ±€33,90–€43,40 afhankelijk seizoen
+      pricePerWeek: 273,
+      priceLabel: "tent",
+      pool: true,              // gemeente-zwembad direct naast (gratis voor gasten)
+      poolType: "open",
+      poolNearby: "openbaar zwembad pal naast camping (10 m)",
+      pitchSize: "80–120 m²",
+      pitchCount: 97,
+      pitchLayout: "laantje",
+      size: "Middelgroot",
+      accommodation: "Tent, caravan, camper, bungalow",
+      amperage: "16A",
+      playground: true,
+      restaurant: true,
+      activities: "Zwembad ernaast, indoor speelhuis, springkussen, rivier Prüm, wandelen, fietsen",
+      ratingAnwb: null,            // 5-sterren classificatie (suncamp)
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availability: "no",      // 8-15 aug volgeboekt volgens ANWB
+      availability2: null,     // 15-22 onbekend
+      availabilityUrl: "https://www.anwbcamping.nl/campings/campingpark-eifel?date_from=2026-08-08&date_to=2026-08-15&children=3%2C7&adults=2&flex=true",
+      availabilityUrl2: "https://www.anwbcamping.nl/campings/campingpark-eifel?date_from=2026-08-15&date_to=2026-08-22&children=3%2C7&adults=2&flex=true",
+      notes: "5★ camping aan de Prüm. Veel plekken direct aan de rivier. Toeristenbelasting €1,20/nacht + €2,50 afval. Vol voor 8–15 aug.",
+      image: null,
+      website: "https://www.campingparkeifel.de/",
+      sources: {
+        price: "https://www.campingparkeifel.de/nl/buchen",
+        pool: "https://www.anwbcamping.nl/campings/campingpark-eifel",
+        pitches: "https://www.anwbcamping.nl/campings/campingpark-eifel",
+        amperage: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/waxweiler/campingpark-eifel-102002/",
+        facilities: "https://www.anwbcamping.nl/campings/campingpark-eifel",
+        activities: "https://www.anwbcamping.nl/campings/campingpark-eifel",
+        ratingZoover: "https://www.zoover.nl/a/76844/campingpark-eifel",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g13987486-d16745157-Reviews-Campingpark_Eifel-Waxweiler_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 10,
+      name: "Camping de Chênefleur",
+      flag: "🇧🇪",
+      location: "Tintigny (Gaume), Ardennen, België",
+      distance: 370,
+      pricePerNight: 63,         // ±€444,50 voor 7 nachten → ±€63/nacht
+      pricePerWeek: 445,
+      priceLabel: "tent",
+      pool: true,
+      poolType: "open",          // verwarmd buitenzwembad + peuterbadje
+      poolNearby: null,
+      pitchSize: "100–125 m²",
+      pitchCount: 211,
+      pitchLayout: "laantje",
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, glamping, luxe huur",
+      amperage: "6–10A",          // ⚠ deels onder de 10A grens
+      playground: true,
+      restaurant: true,
+      activities: "Verwarmd zwembad, kano op Semois, vissen, wandelen, animatie, Florenville",
+      ratingAnwb: 6.8,
+      ratingZoover: 7.3,
+      ratingTripadvisor: null,
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.anwbcamping.nl/campings/camping-de-chenefleur?date_from=2026-08-08&date_to=2026-08-15&children=3%2C7&adults=2&flex=true",
+      availabilityUrl2: "https://www.anwbcamping.nl/campings/camping-de-chenefleur?date_from=2026-08-15&date_to=2026-08-22&children=3%2C7&adults=2&flex=true",
+      notes: "3,5★ camping aan de Semois (Gaume regio). Stroom 6–10A — let op: niet alle plekken hebben 10A. Beoordeling 6.8.",
+      image: null,
+      website: "https://www.chenefleur.be/",
+      sources: {
+        price: "https://www.anwbcamping.nl/campings/camping-de-chenefleur",
+        pool: "https://www.chenefleur.be/",
+        pitches: "https://www.anwbcamping.nl/campings/camping-de-chenefleur",
+        amperage: "https://www.anwbcamping.nl/campings/camping-de-chenefleur",
+        facilities: "https://www.chenefleur.be/",
+        activities: "https://www.chenefleur.be/",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-de-chenefleur",
+        ratingZoover: "https://www.zoover.nl/belgie/luxemburg/tintigny/de-chenefleur/camping",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g3743228-d10683415-Reviews-De_Chenefleur-Tintigny_Luxembourg_Province_The_Ardennes_Wallonia.html"
+      }
+    },
+    {
+      nr: 11,
+      name: "Ardennen Camping Bertrix",
+      flag: "🇧🇪",
+      location: "Bertrix, Luxembourg-provincie, België",
+      distance: 380,
+      pricePerNight: null,       // niet zichtbaar zonder boeking
+      pricePerWeek: null,
+      priceLabel: "tent",
+      priceNote: "prijs via boekingssysteem",
+      pool: true,
+      poolType: "open",          // verwarmd buitenzwembad + peuterbadje
+      poolNearby: null,
+      pitchSize: "90 m²",        // gemiddeld
+      pitchCount: 301,
+      pitchLayout: "laantje",
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, mobile home, safaritent, bungalowtent, houten hut",
+      amperage: "10A",           // standaard 10A; 6 kWh/dag inclusief
+      playground: true,
+      restaurant: true,
+      activities: "Verwarmd zwembad, peuterbadje, animatie, wandelen, fietsen, Semois, dichtbij Florenville",
+      ratingAnwb: null,
+      ratingZoover: 7.7,
+      ratingTripadvisor: 6.0,    // 3/5 op TA
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.eurocampings.co.uk/belgium/luxembourg/bertrix/ardennen-camping-bertrix-101701/",
+      availabilityUrl2: "https://www.eurocampings.co.uk/belgium/luxembourg/bertrix/ardennen-camping-bertrix-101701/",
+      notes: "Open 27 maart – 9 nov 2026. 10A stroom standaard (6 kWh/dag incl., daarna €0,65/kWh). E-auto laadpalen €0,85/kWh.",
+      image: null,
+      website: "https://www.campingbertrix.co.uk/",
+      sources: {
+        price: "https://www.campingbertrix.co.uk/",
+        pool: "https://www.campingbertrix.co.uk/",
+        pitches: "https://www.campingbertrix.co.uk/",
+        amperage: "https://www.campingbertrix.co.uk/frequently-asked-questions",
+        facilities: "https://www.campingbertrix.co.uk/",
+        activities: "https://www.campingbertrix.co.uk/",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g3463962-d8000309-Reviews-Ardennen_Camping_Bertrix-Bertrix_Luxembourg_Province_The_Ardennes_Wallonia.html"
+      }
+    },
+    {
+      nr: 12,
+      name: "Camping Polleur",
+      flag: "🇧🇪",
+      location: "Theux (bij Spa), Luik, België",
+      distance: 280,
+      pricePerNight: null,
+      pricePerWeek: null,
+      priceLabel: "tent",
+      priceNote: "vanaf €9,80/gezin/nacht (kale plek, zomer)",
+      pool: true,
+      poolType: "open",           // 2 zwembaden + 32m glijbaan + peuterbad
+      poolNearby: null,
+      pitchSize: "70–110 m²",
+      pitchCount: 104,
+      pitchLayout: "laantje",     // grasplaatsen, deels gescheiden door hoge heggen
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, mobile home, chalet",
+      amperage: "10–16A",
+      playground: true,
+      restaurant: true,
+      activities: "2 zwembaden + 32m glijbaan, peuterbad, natuurspeeltuin, touwbanen parcours, wandelen, dichtbij Spa",
+      ratingAnwb: 6.0,                 // 1 review op ANWB (niet representatief)
+      ratingZoover: 6.7,                // 369 reviews
+      ratingTripadvisor: 4.0,           // 2/5 op TA
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.campingpolleur.be/",
+      availabilityUrl2: "https://www.campingpolleur.be/",
+      notes: "Familie-camping bij Spa. Twee zwembaden waarvan een met 32m waterglijbaan. Niet boekbaar via ANWB — direct boeken via polleur.be of pitchup.com.",
+      image: null,
+      website: "https://www.campingpolleur.be/",
+      sources: {
+        price: "https://www.polleur.be/tarieven",
+        pool: "https://www.campingpolleur.be/en/facilities",
+        pitches: "https://www.anwbcamping.nl/campings/camping-polleur",
+        amperage: "https://www.anwbcamping.nl/campings/camping-polleur",
+        facilities: "https://www.campingpolleur.be/en/facilities",
+        activities: "https://www.campingpolleur.be/",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-polleur",
+        ratingZoover: "https://www.zoover.nl/belgie/luik/polleur/polleur/camping",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g1081521-d18969093-Reviews-Camping_Polleur-Theux_Liege_Province_The_Ardennes_Wallonia.html"
+      }
+    },
+    {
+      nr: 13,
+      name: "Landal Warsberg",
+      flag: "🇩🇪",
+      location: "Saarburg, Moezel, Duitsland",
+      distance: 410,
+      pricePerNight: null,
+      pricePerWeek: null,
+      priceLabel: "tent",
+      priceNote: "prijs via boekingssysteem",
+      pool: true,
+      poolType: "overdekt",        // overdekt zwembad met glijbanen + jacuzzi
+      poolNearby: null,
+      pitchSize: "80–110 m²",
+      pitchCount: 279,
+      pitchLayout: "laantje",
+      size: "Groot",                // 12 ha, totaal 419 plaatsen + 145 bungalows
+      accommodation: "Tent, caravan, camper, bungalow, stacaravan",
+      amperage: "16A",
+      playground: true,             // binnen- en buitenspeeltuinen
+      restaurant: true,             // restaurant + bistro + snackbar
+      activities: "Overdekt zwembad met glijbanen, jacuzzi, wellness, kinderboerderij, animatie, uitzicht over Saarburg, Moezel",
+      ratingAnwb: 7.5,
+      ratingZoover: null,
+      ratingTripadvisor: 6.0,         // 3/5 op TA
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.landal.nl/parken/warsberg",
+      availabilityUrl2: "https://www.landal.nl/parken/warsberg",
+      notes: "Landal-park hoog boven Saarburg. Overdekt zwembad ideaal bij regen. Niet via ANWB — boek via landal.nl.",
+      image: "https://landal.stylelabs.cloud/api/public/content/8343110-16x9?v=c68b7f1b",
+      website: "https://www.landal.nl/parken/warsberg",
+      sources: {
+        price: "https://www.landal.nl/parken/warsberg",
+        pool: "https://www.anwbcamping.nl/campings/camping-warsberg",
+        pitches: "https://www.anwbcamping.nl/campings/camping-warsberg",
+        amperage: "https://www.anwbcamping.nl/campings/camping-warsberg",
+        facilities: "https://www.anwbcamping.nl/campings/camping-warsberg",
+        activities: "https://www.landal.nl/parken/warsberg",
+        ratingAnwb: "https://www.anwbcamping.nl/campings/camping-warsberg",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g1074292-d668808-Reviews-Landal_Warsberg-Saarburg_Rhineland_Palatinate.html"
+      }
+    },
+    {
+      nr: 14,
+      name: "Camping Oosterberg",
+      flag: "🇳🇱",
+      location: "Epen, Zuid-Limburg, Nederland",
+      distance: 210,
+      pricePerNight: null,
+      pricePerWeek: null,
+      priceLabel: "tent",
+      priceNote: "prijs alleen via camping",
+      pool: false,
+      poolType: null,
+      poolNearby: "buitenbad op 6,8 km + binnenbad in de buurt",
+      pitchSize: "100–150 m²",
+      pitchCount: 300,
+      pitchLayout: "veldje",       // diverse locaties + apart tentenveld
+      size: "Groot",
+      accommodation: "Tent (eigen tentenveld), caravan, camper",
+      amperage: "6A",
+      playground: true,
+      restaurant: false,           // restaurant op 100 m van camping
+      activities: "Wandelen in Heuvelland, fietsen, Geuldal, restaurant op 100m, buitenbad nabij",
+      ratingAnwb: null,                // ANWB erkend, 3-4,5 sterren
+      ratingZoover: 9.2,                // Zoover Orange Award
+      ratingTripadvisor: 8.0,           // 4/5 op TA, #1 specialty lodging in Epen
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.camping-oosterberg.nl/",
+      availabilityUrl2: "https://www.camping-oosterberg.nl/",
+      notes: "Familiecamping in Zuid-Limburg, 3 generaties (sinds 1939). Apart tentenveld. Geen zwembad op terrein (op 6,8 km). 6A stroom — onder de 10A grens. Restaurant op 100 m.",
+      image: null,
+      website: "https://www.camping-oosterberg.nl/",
+      sources: {
+        pool: "https://www.anwbcamping.nl/campings/kampeerterrein-oosterberg",
+        pitches: "https://www.anwbcamping.nl/campings/kampeerterrein-oosterberg",
+        amperage: "https://www.anwbcamping.nl/campings/kampeerterrein-oosterberg",
+        facilities: "https://www.anwbcamping.nl/campings/kampeerterrein-oosterberg",
+        activities: "https://www.camping-oosterberg.nl/",
+        ratingZoover: "https://www.zoover.nl/nederland/limburg/epen/oosterberg/camping",
+        ratingTripadvisor: "https://www.tripadvisor.com/Hotel_Review-g227933-d6586109-Reviews-Camping_Oosterberg-Epen_Limburg_Province.html"
+      }
+    },
+    {
+      nr: 15,
+      name: "Camping In der Enz",
+      flag: "🇩🇪",
+      location: "Neuerburg, Eifel, Duitsland",
+      distance: 340,
+      pricePerNight: 36,            // €30,50 – €41,50 → midden ±€36
+      pricePerWeek: 252,
+      priceLabel: "tent",
+      priceNote: "ACSI €23/nacht in actie-periodes",
+      pool: true,
+      poolType: "open",              // "Aqua Fun" verwarmd buitenzwembad direct naast
+      poolNearby: "Aqua Fun zwembad pal naast camping",
+      pitchSize: null,
+      pitchCount: 100,               // 85 toerist + 15 camper
+      pitchLayout: "laantje",
+      size: "Middelgroot",
+      accommodation: "Tent, caravan, camper, chalet, Waldhütte",
+      amperage: "16A",               // ACSI listed (standaard)
+      playground: true,
+      restaurant: true,              // Enztal-Treff direct naast
+      activities: "Aqua Fun zwembad, kano, wandelen, fietsen, dichtbij Luxemburg (15 km), Neuerburg Luftkurort",
+      ratingAnwb: null,
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.camping-inderenz.com/nl/zoek-boek-overzicht",
+      availabilityUrl2: "https://www.camping-inderenz.com/nl/zoek-boek-overzicht",
+      notes: "Familiecamping in Zuid-Eifel, dicht bij de Luxemburgse grens (15 km). Verwarmd Aqua Fun zwembad en Enztal-Treff restaurant direct naast camping. CampingCard ACSI geldig in bepaalde periodes.",
+      image: "https://www.camping-inderenz.com/images/belevinsslider/comfort.jpg",
+      website: "https://www.camping-inderenz.com/",
+      sources: {
+        price: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/neuerburg/camping-in-der-enz-102003/",
+        pool: "https://www.camping-inderenz.com/",
+        pitches: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/neuerburg/camping-in-der-enz-102003/",
+        amperage: "https://www.eurocampings.co.uk/germany/rhineland-palatinate/neuerburg/camping-in-der-enz-102003/",
+        facilities: "https://www.camping-inderenz.com/",
+        activities: "https://www.camping-inderenz.com/"
+      }
+    },
+    {
+      nr: 16,
+      name: "Camping Les Boucles de la Moselle",
+      flag: "🇫🇷",
+      location: "Liverdun, Lorraine, Frankrijk",
+      distance: 430,
+      pricePerNight: 35,             // €23/2pers basis + ~€12 voor 2 kinderen
+      pricePerWeek: 245,
+      priceLabel: "tent",
+      priceNote: "basis €23/2pers; gezin ±€35",
+      pool: true,
+      poolType: "open",              // openlucht zwembad (01/06 – 31/08)
+      poolNearby: null,
+      pitchSize: null,
+      pitchCount: 198,
+      pitchLayout: "laantje",        // "vlakke, grasrijke en ruime plaatsen"
+      size: "Groot",
+      accommodation: "Tent, caravan, camper, bungalow",
+      amperage: "6–10A",             // ⚠ deels onder de 10A grens
+      playground: null,
+      restaurant: true,              // restaurant + bar + brood
+      activities: "Verwarmd zwembad, vissen, kanoën, fietsen aan de Moezel, Nancy op 20 km, lokale producten",
+      ratingAnwb: null,
+      ratingZoover: null,
+      ratingTripadvisor: null,
+      availability: null,
+      availability2: null,
+      availabilityUrl: "https://www.lesbouclesdelamoselle.com/nl/",
+      availabilityUrl2: "https://www.lesbouclesdelamoselle.com/nl/",
+      notes: "Camping aan de Moezel onder Liverdun (Frankrijk). Open zwembad mei–aug, restaurant + winkel met lokale producten. Supermarkt op 3 km. Nancy op 20 km. Stroom 6–10A.",
+      image: "https://www.lesbouclesdelamoselle.com/templates/yootheme/cache/cf/31975236527_4d65254b43-cf808530.jpeg",
+      website: "https://www.lesbouclesdelamoselle.com/nl/",
+      sources: {
+        price: "https://www.eurocampings.co.uk/france/lorraine/meurthe-et-moselle/liverdun/camping-de-la-moselle-108564/",
+        pool: "https://www.lesbouclesdelamoselle.com/nl/",
+        pitches: "https://www.eurocampings.co.uk/france/lorraine/meurthe-et-moselle/liverdun/camping-de-la-moselle-108564/",
+        amperage: "https://www.eurocampings.co.uk/france/lorraine/meurthe-et-moselle/liverdun/camping-de-la-moselle-108564/",
+        facilities: "https://www.lesbouclesdelamoselle.com/nl/",
+        activities: "https://www.lesbouclesdelamoselle.com/nl/"
+      }
+    }
+  ];
+
+  const tbody = document.getElementById("rows");
+  const search = document.getElementById("search");
+  const onlyPool = document.getElementById("onlyPool");
+  let sortKey = "nr";
+  let sortDir = 1;
+
+  const NOTES_KEY = "vakantie2026.notes";
+  function loadNotes() {
+    try { return JSON.parse(localStorage.getItem(NOTES_KEY) || "{}"); }
+    catch { return {}; }
+  }
+  function saveNotes(notes) {
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  }
+  function getNote(name, fallback) {
+    const notes = loadNotes();
+    if (name in notes) return notes[name];
+    return fallback || "";
+  }
+  function setNote(name, value) {
+    const notes = loadNotes();
+    if (value.trim()) notes[name] = value.trim();
+    else delete notes[name];
+    saveNotes(notes);
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  function withSrc(html, key, c) {
+    const src = c.sources && c.sources[key];
+    if (!src || html === "—") return html;
+    return `<a class="src-link" href="${src}" target="_blank" rel="noopener" title="Bron: ${src.replace(/^https?:\/\//, "").split("/")[0]}">${html}</a>`;
+  }
+
+  function fmtEur(v, withCents) {
+    if (v == null) return null;
+    return "€" + (withCents ? v.toFixed(2).replace(".", ",") : Math.round(v));
+  }
+
+  function ratingAvg(c) {
+    const vals = [c.ratingZoover, c.ratingTripadvisor, c.ratingAnwb].filter(v => v != null);
+    if (!vals.length) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }
+
+  function ratingBadge(label, value, srcKey, c) {
+    const display = value != null ? value.toFixed(1) : "—";
+    const inner = `<div class="rating-row"><span class="rating-label">${label}</span> <span class="rating-value ${value == null ? "rating-empty" : ""}">${display}</span></div>`;
+    return c.sources && c.sources[srcKey]
+      ? `<a class="src-link" href="${c.sources[srcKey]}" target="_blank" rel="noopener">${inner}</a>`
+      : inner;
+  }
+
+  function formatRatings(c) {
+    const avg = ratingAvg(c);
+    const avgLine = avg != null
+      ? `<div class="rating-avg">⌀ ${avg.toFixed(1)}</div>`
+      : "";
+    return avgLine
+      + ratingBadge("ANWB", c.ratingAnwb, "ratingAnwb", c)
+      + ratingBadge("Zoover", c.ratingZoover, "ratingZoover", c)
+      + ratingBadge("TA", c.ratingTripadvisor, "ratingTripadvisor", c);
+  }
+
+  function formatAvailability(c, week) {
+    const v = week === 2 ? c.availability2 : c.availability;
+    const link = (week === 2 ? c.availabilityUrl2 : c.availabilityUrl) || c.website;
+    let inner;
+    if (v === "yes") inner = `<span class="pill yes">✓ Vrij</span>`;
+    else if (v === "no") inner = `<span class="pill no">✗ Vol</span>`;
+    else if (v === "flex") inner = `<span class="pill" style="background:#fef3c7;color:#92400e;">~ ±dagen</span>`;
+    else inner = `<span class="pill" style="background:#e5e7eb;color:#374151;">? check</span>`;
+    return link ? `<a class="src-link" href="${link}" target="_blank" rel="noopener">${inner}</a>` : inner;
+  }
+
+  function formatPool(c) {
+    if (c.pool) {
+      const type = c.poolType ? ` (${c.poolType})` : "";
+      const nearby = c.poolNearby ? `<div class="pool-note">${c.poolNearby}</div>` : "";
+      return `<span class="pill yes">Ja${type}</span>${nearby}`;
+    }
+    if (c.poolNearby) {
+      return `<span class="pill no">Nee</span><div class="pool-note">${c.poolNearby}</div>`;
+    }
+    return `<span class="pill no">Nee</span>`;
+  }
+
+  function facilityBadge(label, icon, value) {
+    let cls = "fac-unknown";
+    let title = "onbekend";
+    if (value === true) { cls = "fac-yes"; title = "ja"; }
+    else if (value === false) { cls = "fac-no"; title = "nee"; }
+    return `<span class="fac ${cls}" title="${label}: ${title}">${icon}</span>`;
+  }
+
+  function formatFacilities(c) {
+    return facilityBadge("Restaurant", "🍽", c.restaurant) +
+           facilityBadge("Speeltuin", "🛝", c.playground);
+  }
+
+  function formatStatus(c) {
+    if (c.rejected) {
+      const reason = c.rejectedReason || "afgewezen";
+      return `<span class="status-cross" title="${escapeHtml(reason)}" tabindex="0">✗<span class="info-tooltip">${escapeHtml(reason)}</span></span>`;
+    }
+    return `<span class="status-check" title="kandidaat">✓</span>`;
+  }
+
+  function formatNr(c) {
+    if (c.nr == null) return "—";
+    if (c._variant != null && c._variantCount > 1) {
+      return c.nr + String.fromCharCode(65 + c._variantIndex);
+    }
+    return c.nr;
+  }
+
+  function formatInfoIcon(c) {
+    const note = getNote(c.name, c.notes);
+    if (!note) return "";
+    return ` <span class="info-icon" tabindex="0">i<span class="info-tooltip">${escapeHtml(note)}</span></span>`;
+  }
+
+  function formatPitch(c) {
+    const lines = [];
+    if (c.pitchSize) lines.push(`<div>${c.pitchSize}</div>`);
+    if (c.pitchLayout) lines.push(`<div class="pitch-layout">${c.pitchLayout}</div>`);
+    if (c.pitchCount != null) lines.push(`<div class="pitch-count">${c.pitchCount} plaatsen</div>`);
+    if (c.size && !c.pitchSize && c.pitchCount == null && !c.pitchLayout) lines.push(`<div>${c.size}</div>`);
+    return lines.length ? lines.join("") : "—";
+  }
+
+  function formatPrice(a, b, note, withCents) {
+    if (a == null && b == null && !note) return "—";
+    const hasBoth = a != null && b != null;
+    const parts = [];
+    if (a != null) {
+      parts.push(hasBoth
+        ? `<div><span class="price-tag">A</span> ${fmtEur(a, withCents)}</div>`
+        : `<div>${fmtEur(a, withCents)}</div>`);
+    }
+    if (b != null) {
+      parts.push(`<div><span class="price-tag price-tag-b">B</span> ${fmtEur(b, withCents)}</div>`);
+    }
+    if (note) parts.push(`<div class="price-note">${note}</div>`);
+    return parts.join("");
+  }
+
+  function flatten(list) {
+    const out = [];
+    for (const c of list) {
+      if (c.variants && c.variants.length) {
+        c.variants.forEach((v, i) => {
+          const row = {...c, ...v, _variant: v.label, _variantIndex: i, _variantCount: c.variants.length};
+          row.ratingAvg = ratingAvg(row);
+          out.push(row);
+        });
+      } else {
+        const row = {...c};
+        row.ratingAvg = ratingAvg(row);
+        out.push(row);
+      }
+    }
+    return out;
+  }
+
+  function render() {
+    const q = search.value.trim().toLowerCase();
+    const pool = onlyPool.checked;
+
+    let rows = flatten(campings).filter(c => {
+      if (pool && !c.pool) return false;
+      if (!q) return true;
+      return (
+        c.name.toLowerCase().includes(q) ||
+        c.location.toLowerCase().includes(q) ||
+        c.activities.toLowerCase().includes(q) ||
+        c.accommodation.toLowerCase().includes(q)
+      );
+    });
+
+    if (sortKey) {
+      const type = document.querySelector(`th[data-sort="${sortKey}"]`).dataset.type;
+      rows.sort((a, b) => {
+        let va = a[sortKey], vb = b[sortKey];
+        if (type === "num") {
+          if (va == null && vb == null) return 0;
+          if (va == null) return 1;   // null altijd onderaan
+          if (vb == null) return -1;
+          return (va - vb) * sortDir;
+        }
+        if (typeof va === "boolean") return (va === vb ? 0 : va ? -1 : 1) * sortDir;
+        return String(va).localeCompare(String(vb)) * sortDir;
+      });
+    }
+
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="18" class="empty">Geen campings gevonden.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows.map(c => `
+      <tr class="${c._variantIndex > 0 ? "variant-row" : ""} ${c.rejected ? "rejected" : ""}">
+        <td class="nr">${formatNr(c)}</td>
+        <td class="status-cell">${formatStatus(c)}</td>
+        <td class="photo-cell">${c.image ? `<a href="${c.image}" target="_blank" rel="noopener"><img src="${c.image}" alt="${c.name}" loading="lazy"></a>` : `<div class="no-photo">geen foto</div>`}</td>
+        <td>
+          <div class="name"><a href="${c.website}" target="_blank" rel="noopener" class="camping-link">${c.name}</a>${formatInfoIcon(c)}</div>
+          <div class="location">${c.flag ? `<span class="flag">${c.flag}</span> ` : ""}${c.location}</div>
+          ${c._variant ? `<div class="variant-label">↳ ${escapeHtml(c._variant)}</div>` : ""}
+        </td>
+        <td data-label="Afstand">${c.distance != null ? c.distance + " km" : "—"}</td>
+        <td data-label="€/nacht">${withSrc(formatPrice(c.pricePerNight, c.pricePerNightB, c.priceNote, true), "price", c)}</td>
+        <td data-label="€/week">${withSrc(formatPrice(c.pricePerWeek, c.pricePerWeekB, null, false), "price", c)}</td>
+        <td data-label="Zwembad">${withSrc(formatPool(c), "pool", c)}</td>
+        <td data-label="Voorz.">${withSrc(formatFacilities(c), "facilities", c)}</td>
+        <td data-label="Plek">${withSrc(formatPitch(c), "pitches", c)}</td>
+        <td data-label="Accommodatie">${c.accommodation}</td>
+        <td data-label="Stroom">${withSrc(c.amperage != null ? c.amperage : "—", "amperage", c)}</td>
+        <td class="activities" data-label="Activiteiten">${withSrc(c.activities, "activities", c)}</td>
+        <td class="rating" data-label="Reviews">${formatRatings(c)}</td>
+        <td data-label="Vrij 8–15 aug">${formatAvailability(c, 1)}</td>
+        <td data-label="Vrij 15–22 aug">${formatAvailability(c, 2)}</td>
+        <td class="notes-cell" data-label="Notities"><div class="notes" contenteditable="true" data-key="${c.name}" data-placeholder="Klik om notitie toe te voegen…">${escapeHtml(getNote(c.name, c.notes))}</div></td>
+        <td data-label="Website"><a class="website" href="${c.website}" target="_blank" rel="noopener">Bekijk →</a></td>
+      </tr>
+    `).join("");
+  }
+
+  document.querySelectorAll("th[data-sort]").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.sort;
+      if (sortKey === key) {
+        sortDir = -sortDir;
+      } else {
+        sortKey = key;
+        sortDir = 1;
+      }
+      document.querySelectorAll("th").forEach(t => t.classList.remove("sorted"));
+      th.classList.add("sorted");
+      render();
+    });
+  });
+
+  search.addEventListener("input", render);
+  onlyPool.addEventListener("change", render);
+
+  tbody.addEventListener("blur", (e) => {
+    const el = e.target.closest(".notes");
+    if (!el) return;
+    setNote(el.dataset.key, el.textContent);
+  }, true);
+
+  render();
+</script>
+
+</body>
+</html>
