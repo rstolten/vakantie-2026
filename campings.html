@@ -175,6 +175,70 @@
   }
   .toolbar button:hover { background: var(--accent-deep); }
   .toolbar button:active { transform: translateY(1px); }
+  .filter-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 6px 10px 6px 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .filter-label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .filter-group select {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-deep);
+    cursor: pointer;
+    padding: 4px 4px;
+    outline: none;
+  }
+  .country-filter {
+    padding: 0 40px 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .country-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+    user-select: none;
+  }
+  .country-chip:hover {
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+  .country-chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .country-chip .flag { font-size: 14px; }
+  .country-chip .count {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-left: 2px;
+  }
   main {
     padding: 0 40px 48px;
     max-width: 1600px;
@@ -629,7 +693,17 @@
   <input type="search" id="search" placeholder="Zoek op naam, locatie of activiteit…">
   <label><input type="checkbox" id="onlyPool"> Alleen met zwembad</label>
   <label><input type="checkbox" id="hideRejected"> Verberg afgewezen</label>
+  <div class="filter-group">
+    <span class="filter-label">Min stroom:</span>
+    <select id="minAmperage">
+      <option value="0">alle</option>
+      <option value="6">6A+</option>
+      <option value="10">10A+</option>
+      <option value="16">16A</option>
+    </select>
+  </div>
 </div>
+<div class="country-filter" id="countryFilter"></div>
 
 <main>
   <div class="table-wrap">
@@ -1368,9 +1442,55 @@
   const search = document.getElementById("search");
   const onlyPool = document.getElementById("onlyPool");
   const hideRejected = document.getElementById("hideRejected");
+  const minAmperageEl = document.getElementById("minAmperage");
+  const countryFilterEl = document.getElementById("countryFilter");
   const statsEl = document.getElementById("stats");
   let sortKey = "nr";
   let sortDir = 1;
+  const activeCountries = new Set();
+
+  function maxAmperage(s) {
+    if (!s) return null;
+    if (/geen/i.test(s)) {
+      // "geen stroom" → 0; "geen / 6A" → 6
+      const nums = s.match(/\d+/g);
+      if (!nums) return 0;
+      return Math.max(...nums.map(Number));
+    }
+    const nums = s.match(/\d+/g);
+    if (!nums) return null;
+    return Math.max(...nums.map(Number));
+  }
+
+  function countryOf(c) {
+    return c.flag || "—";
+  }
+
+  function renderCountryFilter() {
+    const counts = new Map();
+    for (const c of campings) {
+      if (c.nr == null) continue;
+      const k = countryOf(c);
+      counts.set(k, (counts.get(k) || 0) + 1);
+    }
+    countryFilterEl.innerHTML = [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([flag, n]) => {
+        const active = activeCountries.has(flag) ? "active" : "";
+        return `<span class="country-chip ${active}" data-flag="${flag}">
+          <span class="flag">${flag}</span><span class="count">${n}</span>
+        </span>`;
+      }).join("");
+    countryFilterEl.querySelectorAll(".country-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const flag = chip.dataset.flag;
+        if (activeCountries.has(flag)) activeCountries.delete(flag);
+        else activeCountries.add(flag);
+        renderCountryFilter();
+        render();
+      });
+    });
+  }
 
   function renderStats() {
     const unique = campings.filter(c => c.nr != null);
@@ -1553,9 +1673,15 @@
     const pool = onlyPool.checked;
 
     const hideRej = hideRejected.checked;
+    const minAmp = Number(minAmperageEl.value) || 0;
     let rows = flatten(campings).filter(c => {
       if (pool && !c.pool) return false;
       if (hideRej && c.rejected) return false;
+      if (activeCountries.size && !activeCountries.has(countryOf(c))) return false;
+      if (minAmp > 0) {
+        const amp = maxAmperage(c.amperage);
+        if (amp == null || amp < minAmp) return false;
+      }
       if (!q) return true;
       return (
         c.name.toLowerCase().includes(q) ||
@@ -1631,7 +1757,9 @@
   search.addEventListener("input", render);
   onlyPool.addEventListener("change", render);
   hideRejected.addEventListener("change", render);
+  minAmperageEl.addEventListener("change", render);
 
+  renderCountryFilter();
   renderStats();
 
   tbody.addEventListener("blur", (e) => {
