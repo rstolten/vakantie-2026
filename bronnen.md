@@ -21,6 +21,12 @@ Lijst met camping-URL's die we bekijken voor Vakantie 2026.
 - [Camping Oosterberg](https://www.camping-oosterberg.nl/) — Epen, Zuid-Limburg, Nederland
 - [Camping In der Enz](https://www.camping-inderenz.com/) — Neuerburg, Eifel, Duitsland
 - [Camping Les Boucles de la Moselle](https://www.lesbouclesdelamoselle.com/nl/) — Liverdun, Lorraine, Frankrijk
+- [Camping Osenbach](https://www.camping-osenbach.com/) — Osenbach, Elzas, Frankrijk
+- [Le Château de Monfréville](https://www.chateaumonfreville.com/) — Monfréville, Normandië, Frankrijk
+- [Camping Les Deux Ballons](https://www.camping-deux-ballons.fr/nl/) — Saint-Maurice-sur-Moselle, Vogezen, Frankrijk
+- [Camping Val d'Or](https://www.valdor.lu/nl) — Enscherange, Luxemburg
+- [Camping de la Sûre](https://www.campingdelasure.lu/) — Reisdorf, Luxemburg
+- [Camping du Nord](https://www.campingdunord.lu/nl/) — Goebelsmühle, Luxemburg
 
 ## Nog te bekijken
 
